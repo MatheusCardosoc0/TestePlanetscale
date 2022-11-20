@@ -8,12 +8,12 @@ import styles from '../styles/Home.module.css'
 
 const Home: NextPage = () => {
   return (
-    <div >
+    <div className='bg-gray-800 overflow-hidden max-h-screen'>
       <Head>
         <title>RainbowAsk</title>
       </Head>
 
-      <main>
+      <main className='grid grid-cols-9 lg:col-span-7 overflow-hidden pt-4 lg:max-w-[100rem] mx-auto'>
         
         <Sidebar />
         <Feed />

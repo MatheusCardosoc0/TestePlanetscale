@@ -3,11 +3,16 @@ import {TwitterTimelineEmbed} from 'react-twitter-embed'
 
 const Widgets = () => {
   return (
-    <div>
+    <div className='p-2 col-span-2'>
       <TwitterTimelineEmbed
         sourceType="profile"
-        screenName="michaeljackson"
-        options={{ height: 400, width: 400 }}
+        borderColor={"blue"}
+        noBorders={false}
+        noScrollbar={true}
+        linkColor='#ffff00'
+        theme="dark"
+        screenName="elonmusk"
+        options={{ height: 1000 }}
       />
     </div>
   )
