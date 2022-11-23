@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { Tweet } from '../../Typing'
 import Feed from '../components/Feed'
 import Sidebar from '../components/Sidebar'
+import TweetComponent from '../components/TweetComponent'
 import Widgets from '../components/Widgets'
 import styles from '../styles/Home.module.css'
 import { fetchTweets } from '../utils/fetchTweet'
@@ -23,7 +24,13 @@ const Home = ({tweets}: Props) => {
       <main className='grid grid-cols-9 lg:col-span-7 overflow-hidden pt-4 lg:max-w-[100rem] mx-auto'>
         
         <Sidebar />
-        <Feed />
+        <Feed >
+          {tweets.map(tweet => {
+            return (
+              <TweetComponent key={tweet._id} tweet={tweet} />
+            )
+          })}
+        </Feed>
         <Widgets />
 
       </main>
