@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { groq } from 'next-sanity'
+import { sanityClient } from '../../../sanity'
 import { Comment } from '../../../Typing'
 
 const commentsQuery = groq`
@@ -11,11 +12,17 @@ const commentsQuery = groq`
 
 type Data = Comment[]
 
-export default function handler(
+export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
   const {tweetId} = req.query
 
-  res.status(200).json({ name: 'John Doe' })
+  const comments: Comment[] = await sanityClient.fetch(commentsQuery, {
+    tweetId: tweetId
+  })
+
+  
+
+  res.status(200).json(comments)
 }

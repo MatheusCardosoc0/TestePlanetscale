@@ -1,3 +1,4 @@
+import { useSession } from 'next-auth/react'
 import React from 'react'
 import { HiCalendar, HiEmojiHappy, HiLocationMarker, HiPhotograph, HiSearch } from 'react-icons/hi'
 
@@ -7,9 +8,14 @@ interface UserBarProps{
 }
 
 const UserBar = ({setTweet, tweet} : UserBarProps) => {
+
+  const {data: session} = useSession()
+
+  
+
   return (
-    <div className='flex items-center gap-3 bg-blue-800'>
-      <img className='h-[150px] w-[150px] object-cover rounded-lg' src='http://links.papareact.com/gll' width={0} height={0} alt="" />
+    <div className='flex items-center gap-3 bg-blue-800 p-1'>
+      <img className='h-[150px] w-[150px] object-cover rounded-full border-4  border-black' src={session?.user?.image || 'http://links.papareact.com/gll' } width={0} height={0} alt="" />
 
       <form className='flex justify-between px-4 flex-col w-full'>
 
@@ -30,7 +36,7 @@ const UserBar = ({setTweet, tweet} : UserBarProps) => {
 
 
           <button className='p-2 bg-zinc-900/80 rounded-lg text-xl px-4 text-blue-500 hover:brightness-150 disabled:opacity-40'
-            disabled={!tweet}>
+            disabled={!tweet || !session}>
             Tweet
           </button>
         </div>

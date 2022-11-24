@@ -10,8 +10,8 @@ export default {
     },
 
     {
-      name: 'userName',
-      title: 'UserName',
+      name: 'username',
+      title: 'Username',
       type: 'string',
     },
     {
