@@ -11,6 +11,7 @@ interface TweetComponentProps {
 const TweetComponent = ({ tweet }: TweetComponentProps) => {
 
   const [commentTweets, setCommentsTweets] = useState<Comment[]>([])
+  const [hideCommentBox, setHideCommentBox] = useState<boolean>(false)
 
   const refreshComponents = async () => {
     const comments: Comment[] = await fetchComments(tweet._id)
@@ -22,7 +23,6 @@ const TweetComponent = ({ tweet }: TweetComponentProps) => {
     refreshComponents()
   }, [])
 
-  console.log(commentTweets)
 
   return (
     <section className='flex flex-col my-12 mx-12 border-l-[6px] border-t-[6px] border-blue-500 bg-blue-900/30 backdrop-blur-2xl p-2 rounded-xl text-gray-200 border-l-blue-600 '>
@@ -46,7 +46,7 @@ const TweetComponent = ({ tweet }: TweetComponentProps) => {
 
       <div className='flex justify-between text-4xl px-8 py-2 mb-8'>
         <button className='hover:text-blue-500 flex'>
-          <HiChatAlt2 />
+          <HiChatAlt2 onClick={() => setHideCommentBox(!hideCommentBox)} />
           <p>{commentTweets?.length}</p>
         </button>
         <button className='hover:text-blue-300'>

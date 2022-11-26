@@ -17,9 +17,9 @@ const Feed = ({ tweets: tweetsProp }: FeedProps) => {
   const [tweet, setTweet] = useState('')
   const [refreshTweet, setRefreshTweet] = useState<Tweet[]>(tweetsProp)
 
-  const handleRefresh = async () =>{
+  const handleRefresh = async () => {
 
-  const tweetRefreshed = toast.loading('Atualizando...')
+    const tweetRefreshed = toast.loading('Atualizando...')
 
     const tweets = await fetchTweets()
 
@@ -37,15 +37,17 @@ const Feed = ({ tweets: tweetsProp }: FeedProps) => {
         <span className='cursor-pointer' onClick={handleRefresh} >Atualizar</span>
       </div>
 
-      <div className='w-full bg-gradient-to-tr from-gray-900 to-blue-800/40 h-screen rounded-t-2xl overflow-auto not-scroll pb-40'>
+      <div className='mt-12'>
+        <UserBar setTweet={setTweet} tweet={tweet} setRefreshTweet={setRefreshTweet} />
+      </div>
 
-        <div className='z-10 '>
-          <UserBar setTweet={setTweet} tweet={tweet} />
-        </div>
+      <div className='w-full bg-gradient-to-tr from-gray-900 to-blue-800/40 h-screen overflow-auto not-scroll pb-40'>
 
 
-        <div className=' flex mt-20'>
-        {tweetsProp.map(tweet => {
+
+
+        <div className=' flex flex-col mt-20'>
+          {refreshTweet?.map(tweet => {
             return (
               <TweetComponent key={tweet._id} tweet={tweet} />
             )
