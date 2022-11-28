@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { Comment, Tweet } from '../../Typing'
+import { Comment, CommentBody, Tweet } from '../../Typing'
 import Timeago from 'react-timeago'
 import { HiChatAlt2, HiHeart, HiSwitchHorizontal, HiUpload } from 'react-icons/hi'
 import { fetchComments } from '../utils/fetchComments'
+import { useSession } from 'next-auth/react'
+import toast from 'react-hot-toast'
 
 interface TweetComponentProps {
   tweet: Tweet
@@ -12,6 +14,8 @@ const TweetComponent = ({ tweet }: TweetComponentProps) => {
 
   const [commentTweets, setCommentsTweets] = useState<Comment[]>([])
   const [hideCommentBox, setHideCommentBox] = useState<boolean>(false)
+  const [input, setInput] = useState<string>('')
+  const { data: session } = useSession()
 
   const refreshComponents = async () => {
     const comments: Comment[] = await fetchComments(tweet._id)
@@ -22,6 +26,35 @@ const TweetComponent = ({ tweet }: TweetComponentProps) => {
   useEffect(() => {
     refreshComponents()
   }, [])
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => { 
+    e.preventDefault()
+
+    const tweetInfo: CommentBody = {
+      tweetId: tweet._id,
+      comment: input,
+      username: session?.user?.name || 'usuario',
+      profileImg: session?.user?.image || 'https://Links.papareact.com/gll',
+    
+    }
+
+    const result = await fetch(`/api/addComments`, {
+      body: JSON.stringify(tweetInfo),
+      method: 'POST'
+    })
+
+    
+    const json = await result.json()
+
+    
+
+    const newTweets = await fetchComments(tweet._id)
+    setCommentsTweets(newTweets)
+
+    toast.success('e')
+
+    return json
+  }
 
 
   return (
@@ -46,7 +79,7 @@ const TweetComponent = ({ tweet }: TweetComponentProps) => {
 
       <div className='flex justify-between text-4xl px-8 py-2 mb-8'>
         <button className='hover:text-blue-500 flex'>
-          <HiChatAlt2 onClick={() => setHideCommentBox(!hideCommentBox)} />
+          <HiChatAlt2 onClick={() => session && setHideCommentBox(!hideCommentBox)} />
           <p>{commentTweets?.length}</p>
         </button>
         <button className='hover:text-blue-300'>
@@ -61,13 +94,29 @@ const TweetComponent = ({ tweet }: TweetComponentProps) => {
       </div>
 
 
-      {commentTweets.length > 0 &&
+      {hideCommentBox && (
+        <form className='bg-black flex justify-between pl-2 rounded-xl'
+          onSubmit={handleSubmit}>
+          <input className='flex-1 bg-transparent p-1 outline-none placeholder:text-blue-400 text0blue-400'
+            type={"text"}
+            placeholder="Escreva um comentario..."
+            onChange={e => setInput(e.target.value)}
+            value={input} />
+          <button className='bg-blue-500 p-1'
+            disabled={!input}
+            type={"submit"}>Postar</button>
+        </form>
+      )}
+
+
+      {hideCommentBox &&
         <div className='overflow-y-scroll not-scroll flex flex-col gap-2 mx-auto h-[200px]'>
+
           {commentTweets.map(comment => (
             <div key={comment._id}
               className='flex items-center gap-2 p-2 bg-blue-800/60 my-2 rounded-2xl space-y-2 relative'>
 
-                <hr className='absolute h-20 border-x-4 border-blue-500 top-[80px] left-10 z-[-1] ' />
+              <hr className='absolute h-20 border-x-4 border-blue-500 top-[80px] left-10 z-[-1] ' />
 
               <img src={comment.profileImg} alt={comment.username} className='w-[75px] h-[75px] rounded-full' />
               <div className=''>
